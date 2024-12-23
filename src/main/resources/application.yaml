@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: flowery-db-server
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:11234/flowery-write-db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  data:
+    mongodb:
+      username: mongo
+      password: mongo
+      uri: mongodb://localhost:11235/flowery-read-db
+
+server:
+  port: 8080
+
+axon:
+  axonserver:
+    servers: localhost:8124
+  serializer:
+    general: jackson
+    events: jackson
+    messages: jackson
