@@ -26,6 +26,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.axonframework:axon-spring-boot-starter:4.9.0")
+    implementation("org.axonframework.extensions.amqp:axon-amqp:4.9.0")
+    implementation("org.springframework.boot:spring-boot-starter-amqp")
     implementation("org.hibernate.validator:hibernate-validator:6.2.0.Final")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     runtimeOnly("org.postgresql:postgresql")

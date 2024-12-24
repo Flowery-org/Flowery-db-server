@@ -27,8 +27,8 @@ class UserEventHandler(
 
         this.userWriteRepository.save(writeModel)
 
-        val readModel = UserDocument(evt.uid, evt.name)
-        this.userReadRepository.save(readModel)
+        //val readModel = UserDocument(evt.uid, evt.name)
+        //this.userReadRepository.save(readModel)
     }
 
     @EventHandler

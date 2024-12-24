@@ -7,6 +7,7 @@ import com.flowery.flowerydbserver.model.event.UserUpdatedEvent
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
+import org.axonframework.modelling.command.AggregateLifecycle
 import org.axonframework.spring.stereotype.Aggregate
 import java.util.UUID
 
@@ -23,8 +24,8 @@ class UserAggregate {
 
     // Handles create command and emits creation event for state change
     @CommandHandler
-    fun handle(command: CreateUserCommand) {
-        apply { UserCreatedEvent(command.uid, command.name) }
+    constructor(command: CreateUserCommand) {
+        AggregateLifecycle.apply(UserCreatedEvent(command.uid, command.name))
     }
 
     // Updates state based on the event
@@ -36,8 +37,8 @@ class UserAggregate {
 
     //Handles update command and emits update event for the state change
     @CommandHandler
-    fun handle(command: UpdateUserCommand){
-        apply { UserUpdatedEvent(command.uid, command.newName) }
+    fun handle(command: UpdateUserCommand) {
+        AggregateLifecycle.apply(UserUpdatedEvent(command.uid, command.newName))
     }
 
     // Updates state based on the event

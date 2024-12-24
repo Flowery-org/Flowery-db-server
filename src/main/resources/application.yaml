@@ -14,14 +14,26 @@ spring:
       username: mongo
       password: mongo
       uri: mongodb://localhost:11235/flowery-read-db
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 server:
   port: 8080
 
 axon:
-  axonserver:
-    servers: localhost:8124
+  eventhandling:
+    processors:
+      name:
+        mode: subscribing
+        source: springAMQPMessageSource # Config Bean
   serializer:
     general: jackson
     events: jackson
     messages: jackson
+  axonserver:
+    enabled: false
+
+
