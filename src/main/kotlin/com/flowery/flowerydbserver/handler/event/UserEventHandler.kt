@@ -6,31 +6,28 @@ import com.flowery.flowerydbserver.model.event.UserCreatedEvent
 import com.flowery.flowerydbserver.model.event.UserUpdatedEvent
 import com.flowery.flowerydbserver.repository.UserReadRepository
 import com.flowery.flowerydbserver.repository.UserWriteRepository
+import jakarta.transaction.Transactional
 import org.axonframework.eventhandling.EventHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
 class UserEventHandler(
-    @Autowired private val userWriteRepository: UserWriteRepository,
-    @Autowired private val userReadRepository: UserReadRepository
+    @Autowired private val userWriteRepository: UserWriteRepository
 ) {
     //* Handles User Created Event
+    @Transactional
     @EventHandler
     fun on(evt: UserCreatedEvent) {
-        //* Save in both readdb and writedb
-
         val writeModel = UserEntity().apply {
             this.id = evt.uid
             this.name = evt.name
         }
-
+//
         this.userWriteRepository.save(writeModel)
-
-        //val readModel = UserDocument(evt.uid, evt.name)
-        //this.userReadRepository.save(readModel)
     }
 
+    @Transactional
     @EventHandler
     fun on(evt: UserUpdatedEvent){
         this.userWriteRepository.findById(evt.uid.toString()).ifPresent {
@@ -38,9 +35,6 @@ class UserEventHandler(
             userWriteRepository.save(it)
         }
 
-        this.userReadRepository.findById(evt.uid.toString()).ifPresent {
-            userReadRepository.save(it.copy(name = evt.newName))
-        }
     }
 
 }

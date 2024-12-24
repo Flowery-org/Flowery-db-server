@@ -1,16 +1,15 @@
-package com.flowery.flowerydbserver.command
+package com.flowery.flowerydbserver.model.command
 
 import org.axonframework.modelling.command.TargetAggregateIdentifier
-import java.util.UUID
 
 data class CreateUserCommand(
     @TargetAggregateIdentifier
-    val uid: UUID,
+    val uid: String,
     val name: String,
 )
 
 data class UpdateUserCommand(
     @TargetAggregateIdentifier
-    val uid: UUID,
+    val uid: String,
     val newName: String,
 )

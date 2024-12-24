@@ -1,6 +1,6 @@
 package com.flowery.flowerydbserver.controller
 
-import com.flowery.flowerydbserver.command.CreateUserCommand
+import com.flowery.flowerydbserver.model.command.CreateUserCommand
 import com.flowery.flowerydbserver.model.request.CreateUserRequest
 import org.axonframework.commandhandling.gateway.CommandGateway
 import org.axonframework.queryhandling.QueryGateway
@@ -21,7 +21,7 @@ class UserController(
 ) {
     @PostMapping
     fun createUser(@RequestBody request: CreateUserRequest): CompletableFuture<String>{
-        val uid = UUID.randomUUID()
+        val uid = UUID.randomUUID().toString()
         return commandGateway.send(CreateUserCommand(uid, request.name))
     }
 }

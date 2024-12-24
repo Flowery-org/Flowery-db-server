@@ -1,22 +1,22 @@
 package com.flowery.flowerydbserver.aggregate
 
-import com.flowery.flowerydbserver.command.CreateUserCommand
-import com.flowery.flowerydbserver.command.UpdateUserCommand
+import com.flowery.flowerydbserver.model.command.CreateUserCommand
+import com.flowery.flowerydbserver.model.command.UpdateUserCommand
 import com.flowery.flowerydbserver.model.event.UserCreatedEvent
 import com.flowery.flowerydbserver.model.event.UserUpdatedEvent
 import org.axonframework.commandhandling.CommandHandler
 import org.axonframework.eventsourcing.EventSourcingHandler
 import org.axonframework.modelling.command.AggregateIdentifier
 import org.axonframework.modelling.command.AggregateLifecycle
+import org.axonframework.modelling.command.AggregateMember
 import org.axonframework.spring.stereotype.Aggregate
-import java.util.UUID
 
 
 //* Aggregate handles commands and maintains state through event
 @Aggregate
 class UserAggregate {
     @AggregateIdentifier
-    private lateinit var uid: UUID
+    private lateinit var uid: String
     private lateinit var name: String
 
     //* Required by Axon
