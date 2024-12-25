@@ -1,13 +1,8 @@
 package com.flowery.flowerydbserver.handler.event
 
-import com.flowery.flowerydbserver.model.document.UserDocument
-import com.flowery.flowerydbserver.model.entity.UserEntity
-import com.flowery.flowerydbserver.model.event.UserCreatedEvent
-import com.flowery.flowerydbserver.model.event.UserUpdatedEvent
-import com.flowery.flowerydbserver.repository.UserReadRepository
+
 import com.flowery.flowerydbserver.repository.UserWriteRepository
 import jakarta.transaction.Transactional
-import org.axonframework.eventhandling.EventHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -16,25 +11,5 @@ class UserEventHandler(
     @Autowired private val userWriteRepository: UserWriteRepository
 ) {
     //* Handles User Created Event
-    @Transactional
-    @EventHandler
-    fun on(evt: UserCreatedEvent) {
-        val writeModel = UserEntity().apply {
-            this.id = evt.uid
-            this.name = evt.name
-        }
-//
-        this.userWriteRepository.save(writeModel)
-    }
-
-    @Transactional
-    @EventHandler
-    fun on(evt: UserUpdatedEvent){
-        this.userWriteRepository.findById(evt.uid.toString()).ifPresent {
-            it.name = evt.newName
-            userWriteRepository.save(it)
-        }
-
-    }
 
 }

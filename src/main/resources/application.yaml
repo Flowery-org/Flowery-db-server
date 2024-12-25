@@ -23,17 +23,4 @@ spring:
 server:
   port: 8080
 
-axon:
-  eventhandling:
-    processors:
-      name:
-        mode: subscribing
-        source: springAMQPMessageSource # Config Bean
-  serializer:
-    general: jackson
-    events: jackson
-    messages: jackson
-  axonserver:
-    enabled: false
-
 
