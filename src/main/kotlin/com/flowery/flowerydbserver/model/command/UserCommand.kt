@@ -2,7 +2,6 @@ package com.flowery.flowerydbserver.model.command
 
 
 data class CreateUserCommand(
-    val uid: String,
     val name: String,
 )
 

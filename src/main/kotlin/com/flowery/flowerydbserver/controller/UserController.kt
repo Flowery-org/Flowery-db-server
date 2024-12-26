@@ -1,28 +1,29 @@
 package com.flowery.flowerydbserver.controller
 
+import com.flowery.flowerydbserver.gateway.CommandGateway
 import com.flowery.flowerydbserver.model.command.CreateUserCommand
-import com.flowery.flowerydbserver.model.entity.UserEntity
+import com.flowery.flowerydbserver.model.document.UserDocument
+import com.flowery.flowerydbserver.model.query.GetUserQuery
 import com.flowery.flowerydbserver.model.request.CreateUserRequest
-import com.flowery.flowerydbserver.repository.UserWriteRepository
+import com.flowery.flowerydbserver.projection.UserProjection
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.util.*
-import java.util.concurrent.CompletableFuture
 
 @RestController
 @RequestMapping("/api/user")
 class UserController(
-    @Autowired private val writeRepository: UserWriteRepository
+    @Autowired private val commandGateway: CommandGateway,
+    @Autowired private val userProjection: UserProjection
 ) {
     @PostMapping
     fun createUser(@RequestBody request: CreateUserRequest): String {
-        val uid = UUID.randomUUID().toString()
-        //this.writeRepository.save(UserEntity().apply { request.name })
-        return "ok"
-        //return commandGateway.send(CreateUserCommand(uid, request.name))
+        commandGateway.send(CreateUserCommand(request.name),"user", "create")
+        return "ok" //* TODO: Return Proper response
+    }
+
+    @GetMapping("/{id}")
+    fun getUserById(@PathVariable id: String): UserDocument? {
+        return this.userProjection.queryUser(id)
     }
 }
