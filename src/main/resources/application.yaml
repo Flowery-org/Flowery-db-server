@@ -5,20 +5,20 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:postgresql://localhost:11234/flowery-write-db
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: seongbinpark
+    password:
     driver-class-name: org.postgresql.Driver
-  data:
-    mongodb:
-      username: admin
-      password: password
-      uri: mongodb://admin:password@localhost:11235/flowery-read-db?authSource=admin
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+#  data:
+#    mongodb:
+#      username: admin
+#      password: password
+#      uri: mongodb://admin:password@localhost:11235/flowery-read-db?authSource=admin
+#  rabbitmq:
+#    host: localhost
+#    port: 5672
+#    username: guest
+#    password: guest
 
 
 server:
