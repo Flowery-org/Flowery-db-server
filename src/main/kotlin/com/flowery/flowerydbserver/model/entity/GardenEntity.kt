@@ -1,10 +1,17 @@
 package com.flowery.flowerydbserver.model.entity
 
-import jakarta.persistence.*
-import java.util.UUID
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
+import org.hibernate.annotations.DynamicInsert
+import org.hibernate.annotations.DynamicUpdate
+import java.util.*
 
 @Entity
 @Table(name = "garden")
+@DynamicUpdate
+@DynamicInsert
 data class GardenEntity(
     @Id
     @Column(name = "id", length = 36, nullable = false)

@@ -1,11 +1,18 @@
 package com.flowery.flowerydbserver.model.entity
 
-import jakarta.persistence.*
-import java.time.LocalDateTime
-import java.util.UUID
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.Table
+import org.hibernate.annotations.DynamicInsert
+import org.hibernate.annotations.DynamicUpdate
+import java.time.LocalDate
+import java.util.*
 
 @Entity
-@Table(name = "chore")
+@Table(name = "chores")
+@DynamicUpdate
+@DynamicInsert
 data class ChoreEntity(
     @Id
     @Column(name = "id", length = 36, nullable = false)
@@ -27,8 +34,8 @@ data class ChoreEntity(
     var finished: Boolean = false,
 
     @Column(name = "created_at", nullable = false)
-    var createdAt: LocalDateTime = LocalDateTime.now(),
+    var createdAt: LocalDate = LocalDate.now(),
 
     @Column(name = "updated_at")
-    var updatedAt: LocalDateTime? = null
+    var updatedAt: LocalDate? = null
 )
