@@ -4,6 +4,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  # Local DB 연결을 위해 임시 수정
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: seongbinpark
