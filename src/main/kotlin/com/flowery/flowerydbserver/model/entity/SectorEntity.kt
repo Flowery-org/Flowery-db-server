@@ -1,9 +1,6 @@
 package com.flowery.flowerydbserver.model.entity
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
 import java.time.LocalDate
@@ -18,12 +15,16 @@ data class SectorEntity(
     @Column(name = "id", length = 36, nullable = false)
     var id: String = UUID.randomUUID().toString(),
 
-    @Column(name = "gid", length = 255, nullable = false)
-    var gid: String, // Gardener ID
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "garden_id", nullable = false)
+    var gid: GardenEntity,
 
     @Column(name = "fid", length = 255)
     var fid: String? = null, // flower ID
 
     @Column(name = "date")
-    var date: LocalDate? = null
+    var date: LocalDate? = null,
+
+    @OneToMany(mappedBy = "sector", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var chores: MutableList<ChoreEntity> = mutableListOf()
 )
