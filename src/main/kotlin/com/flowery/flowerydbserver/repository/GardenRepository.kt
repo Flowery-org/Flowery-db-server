@@ -8,4 +8,4 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface GardenWriteRepository : JpaRepository<GardenEntity, String>
-interface GardenREadRepository : MongoRepository<GardenDocument, String>
+interface GardenReadRepository : MongoRepository<GardenDocument, String>
