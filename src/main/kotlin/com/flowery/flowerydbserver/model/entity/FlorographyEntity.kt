@@ -16,7 +16,7 @@ data class FlorographyEntity(
     var id: String = UUID.randomUUID().toString(),
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "kind", length = 255, nullable = false)
+    @Column(name = "kind", nullable = false)
     var kind: FlowerKind,
 
     @Column(name = "content", length = 255, nullable = false)
