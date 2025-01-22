@@ -1,4 +1,4 @@
-import com.flowery.flowerydbserver.model.entity.FlorographyEntity
+import com.flowery.flowerydbserver.model.entity.*
 import jakarta.persistence.*
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
@@ -15,22 +15,17 @@ data class FlowerEntity(
     @Column(name = "id", nullable = false, unique = true)
     val id: String = UUID.randomUUID().toString(),
 
-    @Column(name = "uid", nullable = false)
-    val uid: String,
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "florography_id", nullable = false)
-    val fid: FlorographyEntity, // Florography ID
+    val kid: FlorographyEntity, // Florography ID
 
     @Enumerated(EnumType.STRING)
     @Column(name = "color", nullable = false)
     val color: FlowerColor,
 
-    @Column(name = "created_at", nullable = false)
-    val createdAt: LocalDate = LocalDate.now(),
+    @OneToMany(mappedBy = "gardener_flower",cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val gardenerFlowers: List<GardenerFlowerEntity> = mutableListOf()
 
-    @Column(name = "updated_at", nullable = false)
-    val updatedAt: LocalDate = LocalDate.now()
 ) {
     enum class FlowerColor {
         RED, YELLOW, BLUE, WHITE // 필요에 따라 추가
