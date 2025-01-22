@@ -15,20 +15,39 @@ data class FlowerEntity(
     @Column(name = "id", nullable = false, unique = true)
     val id: String = UUID.randomUUID().toString(),
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "florography_id", nullable = false)
-    val kid: FlorographyEntity, // Florography ID
-
     @Enumerated(EnumType.STRING)
     @Column(name = "color", nullable = false)
     val color: FlowerColor,
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "kind", nullable = false, unique = true)
+    val kind: Kind,
+
+    @Column(name = "content", nullable = false, unique = true)
+    val content: String = kind.content,
 
     @OneToMany(mappedBy = "gardener_flower",cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val gardenerFlowers: List<GardenerFlowerEntity> = mutableListOf()
 
 ) {
     enum class FlowerColor {
-        RED, YELLOW, BLUE, WHITE // 필요에 따라 추가
+        RED, YELLOW, BLUE, WHITE; // 필요에 따라 추가
+        companion object {
+            fun random(): FlowerColor {
+                return values().random()
+            }
+        }
+    }
+
+    enum class Kind(val content: String) {
+        ROSE("Love and Passion"),
+        SUNFLOWER("Adoration and Loyalty");
+
+        companion object {
+            fun random(): Kind {
+                return values().random()
+            }
+        }
     }
 }
 
