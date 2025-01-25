@@ -1,5 +1,5 @@
 package com.flowery.flowerydbserver.model.entity
-import FlowerEntity
+import com.flowery.flowerydbserver.constant.GardenerStatus
 import jakarta.persistence.*
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
@@ -41,7 +41,7 @@ data class GardenerEntity(
     @Column(name = "created_at", nullable = false)
     var createdAt: LocalDate = LocalDate.now(),
 
-    @Column(name = "updated_at")
+    @Column(name = "updated_at",nullable = false)
     var updatedAt: LocalDate = LocalDate.now(),
 
     @OneToMany(mappedBy = "gardener_flower", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
@@ -54,12 +54,6 @@ data class GardenerEntity(
     var chores: List<ChoreEntity> = mutableListOf(),
 
     @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
-    var garden: GardenEntity
+    var garden: GardenEntity? = null
 
-) {
-    enum class GardenerStatus{
-        UNFINISHED,
-        NORMAL,
-        ADMIN;
-    }
-}
+)

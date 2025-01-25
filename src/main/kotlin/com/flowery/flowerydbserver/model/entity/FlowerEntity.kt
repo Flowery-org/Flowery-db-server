@@ -1,8 +1,9 @@
+import com.flowery.flowerydbserver.constant.FlowerColor
+import com.flowery.flowerydbserver.constant.Kind
 import com.flowery.flowerydbserver.model.entity.*
 import jakarta.persistence.*
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
-import java.time.LocalDate
 import java.util.UUID
 
 @Entity
@@ -30,25 +31,6 @@ data class FlowerEntity(
     val gardenerFlowers: List<GardenerFlowerEntity> = mutableListOf()
 
 ) {
-    enum class FlowerColor {
-        RED, YELLOW, BLUE, WHITE; // 필요에 따라 추가
-        companion object {
-            fun random(): FlowerColor {
-                return values().random()
-            }
-        }
-    }
-
-    enum class Kind(val content: String) {
-        ROSE("Love and Passion"),
-        SUNFLOWER("Adoration and Loyalty");
-
-        companion object {
-            fun random(): Kind {
-                return values().random()
-            }
-        }
-    }
 }
 
 
