@@ -1,6 +1,6 @@
 import com.flowery.flowerydbserver.constant.FlowerColor
 import com.flowery.flowerydbserver.constant.Kind
-import com.flowery.flowerydbserver.model.entity.*
+import com.flowery.flowerydbserver.model.entity.GardenerFlowerEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate

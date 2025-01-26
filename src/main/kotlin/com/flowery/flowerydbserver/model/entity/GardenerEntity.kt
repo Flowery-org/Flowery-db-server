@@ -1,5 +1,4 @@
 package com.flowery.flowerydbserver.model.entity
-
 import com.flowery.flowerydbserver.constant.GardenerStatus
 import jakarta.persistence.*
 import org.hibernate.annotations.DynamicInsert
