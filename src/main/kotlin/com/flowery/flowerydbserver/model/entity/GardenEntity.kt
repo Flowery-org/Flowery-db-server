@@ -14,8 +14,9 @@ data class GardenEntity(
     @Column(name = "id", length = 36, nullable = false)
     var id: String = UUID.randomUUID().toString(),
 
-    @Column(name = "uid", length = 255, nullable = false)
-    var uid: String, // Gardener ID
+    @OneToOne
+    @JoinColumn(name = "gardener_id", nullable = false)
+    var uid: GardenerEntity, // Gardener ID
 
     @Column(name = "key", length = 255)
     var key: String? = null,

@@ -15,18 +15,16 @@ data class ChoreEntity(
     @Column(name = "id", length = 36, nullable = false)
     var id: String = UUID.randomUUID().toString(),
 
-    @Column(name = "uid", length = 255, nullable = false)
-    var uid: String, // Gardener ID
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "gardener_id", nullable = false)
+    var uid: GardenEntity, // Gardener ID
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sector_id", nullable = false)
-    var sid: SectorEntity,
-
-    @Column(name = "fid", length = 255)
-    var fid: String? = null, // flower ID
+    @JoinColumn(name = "gardenerflower_id", nullable = false)
+    var gfid: GardenerFlowerEntity,
 
     @Column(name = "content", length = 255)
-    var content: String? = null,
+    var content: String,
 
     @Column(name = "finished", nullable = false)
     var finished: Boolean = false,
@@ -35,5 +33,5 @@ data class ChoreEntity(
     var createdAt: LocalDate = LocalDate.now(),
 
     @Column(name = "updated_at")
-    var updatedAt: LocalDate? = null
+    var updatedAt: LocalDate = LocalDate.now()
 )
