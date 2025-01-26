@@ -16,11 +16,11 @@ data class GardenEntity(
 
     @OneToOne
     @JoinColumn(name = "gardener_id", nullable = false)
-    var uid: GardenerEntity, // Gardener ID
+    var gardener: GardenerEntity, // Gardener ID
 
     @Column(name = "key", length = 255)
     var key: String? = null,
 
     @OneToMany(mappedBy = "garden", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var sectors: MutableList<SectorEntity> = mutableListOf()
+    var sectors: List<SectorEntity> = mutableListOf()
 )

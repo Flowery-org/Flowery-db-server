@@ -7,21 +7,21 @@ import com.flowery.flowerydbserver.model.command.DeleteChoreCommand
 import com.flowery.flowerydbserver.model.command.UpdateChoreCommand
 import com.flowery.flowerydbserver.model.document.ChoreDocument
 import com.flowery.flowerydbserver.model.entity.ChoreEntity
-import com.flowery.flowerydbserver.model.entity.SectorEntity
 import com.flowery.flowerydbserver.repository.ChoreWriteRepository
-import com.flowery.flowerydbserver.repository.SectorWriteRepository
+import com.flowery.flowerydbserver.repository.GardenWriteRepository
+import com.flowery.flowerydbserver.repository.GardenerFlowerWriteRepository
 import com.google.gson.Gson
 import org.springframework.amqp.core.Message
 import org.springframework.amqp.rabbit.annotation.RabbitListener
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 
 @Component
 class ChoreAggregate(
-    @Autowired private val choreWriteRepository: ChoreWriteRepository,
-    @Autowired private val sectorWriteRepository: SectorWriteRepository,
-    @Autowired private val syncGateway: SyncGateway
+    private val choreWriteRepository: ChoreWriteRepository,
+    private val gardenWriteRepository: GardenWriteRepository,
+    private val gardenerFlowerWriteRepository: GardenerFlowerWriteRepository,
+    private val syncGateway: SyncGateway
 ) {
     @RabbitListener(queues = [CommandQueueNameList.CHORE_QUEUE])
     fun on(message: Message) {
@@ -36,33 +36,29 @@ class ChoreAggregate(
     private fun createChore(message: Message) {
         val command = Gson().fromJson(String(message.body), CreateChoreCommand::class.java)
 
-        // 1) command.sid 는 Sector의 ID(문자열)일 것
-        // 2) 실제 DB에서 SectorEntity 조회
-        val sectorOpt = sectorWriteRepository.findById(command.sid)
-        if (!sectorOpt.isPresent) {
-            // TODO: Sector가 없을 경우 예외 처리
+        // FK 조회
+        val gardenOpt = gardenWriteRepository.findById(command.gid)
+        val gfOpt = gardenerFlowerWriteRepository.findById(command.gfid)
+        if (!gardenOpt.isPresent || !gfOpt.isPresent) {
+            // TODO handle error
             return
         }
-        val sectorEntity: SectorEntity = sectorOpt.get()
 
-        // 3) ChoreEntity 에 sectorEntity를 넣어준다
         val newChore = ChoreEntity(
-            uid = command.uid,
-            sid = sectorEntity,  // ManyToOne
-            fid = command.fid,
+            garden = gardenOpt.get(),
+            gardenerFlower = gfOpt.get(),
             content = command.content,
             finished = false,
             createdAt = LocalDate.now(),
-            updatedAt = null
+            updatedAt = LocalDate.now()
         )
         val saved = choreWriteRepository.save(newChore)
 
-        // 4) ReadDB(Mongo) 동기화 (upsert)
+        // Make Document
         val doc = ChoreDocument(
             id = saved.id,
-            uid = saved.uid,
-            sid = saved.sid.id,
-            fid = saved.fid,
+            gardenId = saved.garden.id,
+            gardenerFlowerId = saved.gardenerFlower.id,
             content = saved.content,
             finished = saved.finished,
             createdAt = saved.createdAt,
@@ -73,45 +69,36 @@ class ChoreAggregate(
 
     private fun updateChore(message: Message) {
         val command = Gson().fromJson(String(message.body), UpdateChoreCommand::class.java)
-
-        val choreOpt = choreWriteRepository.findById(command.id)
-        if (choreOpt.isPresent) {
-            val chore = choreOpt.get()
-            chore.content = command.content
-            chore.finished = command.finished
-            chore.updatedAt = LocalDate.now()
-
-            // sector도 새로?
-//             val newSectorOpt = sectorWriteRepository.findById(command.newSectorId)
-//             if (newSectorOpt.isPresent) {
-//                 chore.sid = newSectorOpt.get()
-//             }
-
-            val saved = choreWriteRepository.save(chore)
-            val doc = ChoreDocument(
-                id = saved.id,
-                uid = saved.uid,
-                sid = saved.sid.id,
-                fid = saved.fid,
-                content = saved.content,
-                finished = saved.finished,
-                createdAt = saved.createdAt,
-                updatedAt = saved.updatedAt
-            )
-            syncGateway.send(doc, "chore", "upsert")
-        } else {
-            // TODO: 예외 처리
+        val choreOpt = choreWriteRepository.findById(command.choreId)
+        if (!choreOpt.isPresent) {
+            // TODO handle error
+            return
         }
+        val chore = choreOpt.get()
+        chore.content = command.content
+        chore.finished = command.finished
+        chore.updatedAt = LocalDate.now()
+
+        val saved = choreWriteRepository.save(chore)
+        val doc = ChoreDocument(
+            id = saved.id,
+            gardenId = saved.garden.id,
+            gardenerFlowerId = saved.gardenerFlower.id,
+            content = saved.content,
+            finished = saved.finished,
+            createdAt = saved.createdAt,
+            updatedAt = saved.updatedAt
+        )
+        syncGateway.send(doc, "chore", "upsert")
     }
 
     private fun deleteChore(message: Message) {
         val command = Gson().fromJson(String(message.body), DeleteChoreCommand::class.java)
-        val choreOpt = choreWriteRepository.findById(command.id)
-        if (choreOpt.isPresent) {
-            choreWriteRepository.deleteById(command.id)
-            syncGateway.send(mapOf("id" to command.id), "chore", "delete")
+        if (choreWriteRepository.existsById(command.choreId)) {
+            choreWriteRepository.deleteById(command.choreId)
+            syncGateway.send(mapOf("id" to command.choreId), "chore", "delete")
         } else {
-            // TODO: 예외 처리
+            // TODO handle error
         }
     }
 }

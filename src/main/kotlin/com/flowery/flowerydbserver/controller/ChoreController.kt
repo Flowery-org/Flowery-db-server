@@ -1,7 +1,6 @@
 package com.flowery.flowerydbserver.controller
 
 import com.flowery.flowerydbserver.gateway.CommandGateway
-import com.flowery.flowerydbserver.model.command.CreateChoreCommand
 import com.flowery.flowerydbserver.model.command.DeleteChoreCommand
 import com.flowery.flowerydbserver.model.command.UpdateChoreCommand
 import com.flowery.flowerydbserver.model.request.CreateChoreRequest

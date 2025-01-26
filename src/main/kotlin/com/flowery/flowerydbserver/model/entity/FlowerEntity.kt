@@ -30,6 +30,4 @@ data class FlowerEntity(
     @OneToMany(mappedBy = "gardener_flower", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val gardenerFlowers: List<GardenerFlowerEntity> = mutableListOf()
 
-) {
-}
-
+)

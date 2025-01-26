@@ -1,18 +1,17 @@
 package com.flowery.flowerydbserver.model.command
 
 data class CreateChoreCommand(
-    val uid: String,
-    val sid: String,
-    val fid: String?,
-    val content: String?
+    val gid: String,    // gardenId
+    val gfid: String,   // gardenerFlowerId
+    val content: String // non-null
 )
 
 data class UpdateChoreCommand(
-    val id: String,
-    val content: String?,
+    val choreId: String,
+    val content: String,
     val finished: Boolean
 )
 
 data class DeleteChoreCommand(
-    val id: String
+    val choreId: String
 )

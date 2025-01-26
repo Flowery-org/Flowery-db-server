@@ -8,16 +8,17 @@ import com.flowery.flowerydbserver.model.command.UpdateGardenCommand
 import com.flowery.flowerydbserver.model.document.GardenDocument
 import com.flowery.flowerydbserver.model.entity.GardenEntity
 import com.flowery.flowerydbserver.repository.GardenWriteRepository
+import com.flowery.flowerydbserver.repository.GardenerWriteRepository
 import com.google.gson.Gson
 import org.springframework.amqp.core.Message
 import org.springframework.amqp.rabbit.annotation.RabbitListener
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
 class GardenAggregate(
-    @Autowired private val gardenWriteRepository: GardenWriteRepository,
-    @Autowired private val syncGateway: SyncGateway
+    private val gardenWriteRepository: GardenWriteRepository,
+    private val gardenerWriteRepository: GardenerWriteRepository,
+    private val syncGateway: SyncGateway
 ) {
     @RabbitListener(queues = [CommandQueueNameList.GARDEN_QUEUE])
     fun on(message: Message) {
@@ -31,16 +32,20 @@ class GardenAggregate(
 
     private fun createGarden(message: Message) {
         val command = Gson().fromJson(String(message.body), CreateGardenCommand::class.java)
-
-        val newEntity = GardenEntity(
-            uid = command.uid,
+        val gardenerOpt = gardenerWriteRepository.findById(command.gardenerId)
+        if (!gardenerOpt.isPresent) {
+            // handle error
+            return
+        }
+        val newGarden = GardenEntity(
+            gardener = gardenerOpt.get(),
             key = command.key
         )
-        val saved = gardenWriteRepository.save(newEntity)
+        val saved = gardenWriteRepository.save(newGarden)
 
         val doc = GardenDocument(
             id = saved.id,
-            uid = saved.uid,
+            gardenerId = saved.gardener.id,
             key = saved.key
         )
         syncGateway.send(doc, "garden", "upsert")
@@ -48,31 +53,30 @@ class GardenAggregate(
 
     private fun updateGarden(message: Message) {
         val command = Gson().fromJson(String(message.body), UpdateGardenCommand::class.java)
-        val entityOpt = gardenWriteRepository.findById(command.id)
-        if (entityOpt.isPresent) {
-            val garden = entityOpt.get()
-            garden.key = command.key
-
-            val saved = gardenWriteRepository.save(garden)
-            val doc = GardenDocument(
-                id = saved.id,
-                uid = saved.uid,
-                key = saved.key
-            )
-            syncGateway.send(doc, "garden", "upsert")
-        } else {
-            // TODO: 예외 처리
+        val gardenOpt = gardenWriteRepository.findById(command.gardenId)
+        if (!gardenOpt.isPresent) {
+            // handle error
+            return
         }
+        val garden = gardenOpt.get()
+        garden.key = command.key
+        val saved = gardenWriteRepository.save(garden)
+
+        val doc = GardenDocument(
+            id = saved.id,
+            gardenerId = saved.gardener.id,
+            key = saved.key
+        )
+        syncGateway.send(doc, "garden", "upsert")
     }
 
     private fun deleteGarden(message: Message) {
         val command = Gson().fromJson(String(message.body), DeleteGardenCommand::class.java)
-        val entityOpt = gardenWriteRepository.findById(command.id)
-        if (entityOpt.isPresent) {
-            gardenWriteRepository.deleteById(command.id)
-            syncGateway.send(mapOf("id" to command.id), "garden", "delete")
+        if (gardenWriteRepository.existsById(command.gardenId)) {
+            gardenWriteRepository.deleteById(command.gardenId)
+            syncGateway.send(mapOf("id" to command.gardenId), "garden", "delete")
         } else {
-            // TODO: 예외 처리
+            // handle error
         }
     }
 }

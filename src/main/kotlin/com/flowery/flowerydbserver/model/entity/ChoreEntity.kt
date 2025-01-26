@@ -17,11 +17,11 @@ data class ChoreEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gardener_id", nullable = false)
-    var uid: GardenEntity, // Gardener ID
+    var garden: GardenEntity, // Gardener ID
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gardenerflower_id", nullable = false)
-    var gfid: GardenerFlowerEntity,
+    var gardenerFlower: GardenerFlowerEntity,
 
     @Column(name = "content", length = 255)
     var content: String,
