@@ -8,8 +8,8 @@ import java.time.LocalDate
 data class ChoreDocument(
     @Id
     val id: String,
-    val gardenId: String,          // garden.id
-    val gardenerFlowerId: String,  // gardenerFlower.id
+    val gid: String,   // GardenEntity ID
+    val gfid: String,  // GardenerFlowerEntity ID
     val content: String,
     val finished: Boolean,
     val createdAt: LocalDate,

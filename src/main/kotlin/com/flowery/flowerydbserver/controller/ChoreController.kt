@@ -1,10 +1,12 @@
 package com.flowery.flowerydbserver.controller
 
 import com.flowery.flowerydbserver.gateway.CommandGateway
-import com.flowery.flowerydbserver.model.command.DeleteChoreCommand
+import com.flowery.flowerydbserver.model.command.CreateChoreCommand
 import com.flowery.flowerydbserver.model.command.UpdateChoreCommand
+import com.flowery.flowerydbserver.model.command.DeleteChoreCommand
 import com.flowery.flowerydbserver.model.request.CreateChoreRequest
 import com.flowery.flowerydbserver.model.request.UpdateChoreRequest
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -13,38 +15,34 @@ class ChoreController(
     private val commandGateway: CommandGateway
 ) {
     @PostMapping
-    fun createChore(@RequestBody request: CreateChoreRequest): String {
+    fun createChore(@RequestBody request: CreateChoreRequest): ResponseEntity<Any> {
         val command = CreateChoreCommand(
-            uid = request.uid,
-            sid = request.sid,
-            fid = request.fid,
+            gid = request.gid,
+            gfid = request.gfid,
             content = request.content
         )
-        // "command.chore.create"
         commandGateway.send(command, "chore", "create")
-        return "Chore created."
+        return ResponseEntity.ok("Chore created.")
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{choreId}")
     fun updateChore(
-        @PathVariable id: String,
+        @PathVariable choreId: String,
         @RequestBody request: UpdateChoreRequest
-    ): String {
+    ): ResponseEntity<Any> {
         val command = UpdateChoreCommand(
-            id = id,
+            choreId = choreId,
             content = request.content,
             finished = request.finished
         )
-        // "command.chore.update"
         commandGateway.send(command, "chore", "update")
-        return "Chore updated."
+        return ResponseEntity.ok("Chore updated.")
     }
 
-    @DeleteMapping("/{id}")
-    fun deleteChore(@PathVariable id: String): String {
-        val command = DeleteChoreCommand(id)
-        // "command.chore.delete"
+    @DeleteMapping("/{choreId}")
+    fun deleteChore(@PathVariable choreId: String): ResponseEntity<Any> {
+        val command = DeleteChoreCommand(choreId)
         commandGateway.send(command, "chore", "delete")
-        return "Chore deleted."
+        return ResponseEntity.ok("Chore deleted.")
     }
 }

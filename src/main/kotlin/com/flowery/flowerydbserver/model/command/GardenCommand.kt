@@ -1,15 +1,15 @@
 package com.flowery.flowerydbserver.model.command
 
 data class CreateGardenCommand(
-    val gardenerId: String,
+    val gid: String,
     val key: String?
 )
 
 data class UpdateGardenCommand(
-    val gardenId: String,
+    val gid: String,
     val key: String?
 )
 
 data class DeleteGardenCommand(
-    val gardenId: String
+    val gid: String
 )
