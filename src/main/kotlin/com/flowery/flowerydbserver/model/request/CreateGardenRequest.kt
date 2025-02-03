@@ -1,6 +1,6 @@
 package com.flowery.flowerydbserver.model.request
 
 data class CreateGardenRequest(
-    val uid: String,
+    val gid: String,
     val key: String?
 )

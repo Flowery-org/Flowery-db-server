@@ -18,15 +18,12 @@ data class SectorEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "garden_id")
-    var gid: FlowerEntity,
+    var flower: FlowerEntity,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gardenerFlower_id", nullable = false)
-    var gfid: GardenerFlowerEntity,
+    var gardenerFlower: GardenerFlowerEntity,
 
     @Column(name = "date")
-    var date: LocalDate = LocalDate.now(),
-
-    @OneToOne(fetch = FetchType.LAZY)
-    val gardenerFlower: GardenerFlowerEntity
+    var date: LocalDate = LocalDate.now()
 )

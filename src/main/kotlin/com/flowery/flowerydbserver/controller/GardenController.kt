@@ -2,10 +2,11 @@ package com.flowery.flowerydbserver.controller
 
 import com.flowery.flowerydbserver.gateway.CommandGateway
 import com.flowery.flowerydbserver.model.command.CreateGardenCommand
-import com.flowery.flowerydbserver.model.command.DeleteGardenCommand
 import com.flowery.flowerydbserver.model.command.UpdateGardenCommand
+import com.flowery.flowerydbserver.model.command.DeleteGardenCommand
 import com.flowery.flowerydbserver.model.request.CreateGardenRequest
 import com.flowery.flowerydbserver.model.request.UpdateGardenRequest
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -14,32 +15,32 @@ class GardenController(
     private val commandGateway: CommandGateway
 ) {
     @PostMapping
-    fun createGarden(@RequestBody request: CreateGardenRequest): String {
+    fun createGarden(@RequestBody request: CreateGardenRequest): ResponseEntity<Any> {
         val command = CreateGardenCommand(
-            uid = request.uid,
+            gid = request.gid,
             key = request.key
         )
         commandGateway.send(command, "garden", "create")
-        return "Garden created."
+        return ResponseEntity.ok("Garden created.")
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{gid}")
     fun updateGarden(
-        @PathVariable id: String,
+        @PathVariable gid: String,
         @RequestBody request: UpdateGardenRequest
-    ): String {
+    ): ResponseEntity<Any> {
         val command = UpdateGardenCommand(
-            id = id,
+            gid = gid,
             key = request.key
         )
         commandGateway.send(command, "garden", "update")
-        return "Garden updated."
+        return ResponseEntity.ok("Garden updated.")
     }
 
-    @DeleteMapping("/{id}")
-    fun deleteGarden(@PathVariable id: String): String {
-        val command = DeleteGardenCommand(id)
+    @DeleteMapping("/{gid}")
+    fun deleteGarden(@PathVariable gid: String): ResponseEntity<Any> {
+        val command = DeleteGardenCommand(gid)
         commandGateway.send(command, "garden", "delete")
-        return "Garden deleted."
+        return ResponseEntity.ok("Garden deleted.")
     }
 }

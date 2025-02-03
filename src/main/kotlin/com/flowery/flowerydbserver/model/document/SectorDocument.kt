@@ -8,7 +8,7 @@ import java.time.LocalDate
 data class SectorDocument(
     @Id
     val id: String,
-    val gid: String,
-    val fid: String?,
-    val date: LocalDate?
+    val fid: String,   // FlowerEntity ID
+    val gfid: String,  // GardenerFlowerEntity ID
+    val date: LocalDate
 )
