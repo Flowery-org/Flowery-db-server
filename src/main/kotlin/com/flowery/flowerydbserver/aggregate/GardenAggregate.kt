@@ -33,7 +33,7 @@ class GardenAggregate(
 
     private fun createGarden(message: Message) {
         val command = Gson().fromJson(String(message.body), CreateGardenCommand::class.java)
-        val gardenerOpt = gardenerWriteRepository.findById(command.gardenerId)
+        val gardenerOpt = gardenerWriteRepository.findById(command.gid)
         if (!gardenerOpt.isPresent) {
             // handle error
             return
@@ -54,7 +54,7 @@ class GardenAggregate(
 
     private fun updateGarden(message: Message) {
         val command = Gson().fromJson(String(message.body), UpdateGardenCommand::class.java)
-        val gardenOpt = gardenWriteRepository.findById(command.gardenId)
+        val gardenOpt = gardenWriteRepository.findById(command.gid)
         if (!gardenOpt.isPresent) {
             // handle error
             return
@@ -73,9 +73,9 @@ class GardenAggregate(
 
     private fun deleteGarden(message: Message) {
         val command = Gson().fromJson(String(message.body), DeleteGardenCommand::class.java)
-        if (gardenWriteRepository.existsById(command.gardenId)) {
-            gardenWriteRepository.deleteById(command.gardenId)
-            syncGateway.send(mapOf("id" to command.gardenId), "garden", "delete")
+        if (gardenWriteRepository.existsById(command.gid)) {
+            gardenWriteRepository.deleteById(command.gid)
+            syncGateway.send(mapOf("id" to command.gid), "garden", "delete")
         } else {
             // handle error
         }
