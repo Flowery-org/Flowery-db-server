@@ -9,7 +9,7 @@ import java.util.*
 @Table(name = "garden")
 @DynamicUpdate
 @DynamicInsert
-data class  GardenEntity(
+data class GardenEntity(
     @Id
     @Column(name = "id", length = 36, nullable = false)
     var id: String = UUID.randomUUID().toString(),

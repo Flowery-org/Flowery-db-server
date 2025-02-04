@@ -6,11 +6,11 @@ import com.flowery.flowerydbserver.model.command.CreateSectorCommand
 import com.flowery.flowerydbserver.model.command.UpdateSectorCommand
 import com.flowery.flowerydbserver.model.command.DeleteSectorCommand
 import com.flowery.flowerydbserver.model.document.SectorDocument
-import com.flowery.flowerydbserver.model.entity.FlowerEntity
-import com.flowery.flowerydbserver.model.entity.GardenerFlowerEntity
 import com.flowery.flowerydbserver.model.entity.SectorEntity
+import com.flowery.flowerydbserver.model.entity.GardenEntity
+import com.flowery.flowerydbserver.model.entity.GardenerFlowerEntity
 import com.flowery.flowerydbserver.repository.SectorWriteRepository
-import com.flowery.flowerydbserver.repository.FlowerWriteRepository
+import com.flowery.flowerydbserver.repository.GardenWriteRepository
 import com.flowery.flowerydbserver.repository.GardenerFlowerWriteRepository
 import com.google.gson.Gson
 import org.springframework.amqp.core.Message
@@ -21,7 +21,7 @@ import java.time.LocalDate
 @Component
 class SectorAggregate(
     private val sectorWriteRepository: SectorWriteRepository,
-    private val flowerWriteRepository: FlowerWriteRepository,
+    private val gardenWriteRepository: GardenWriteRepository,
     private val gardenerFlowerWriteRepository: GardenerFlowerWriteRepository,
     private val syncGateway: SyncGateway
 ) {
@@ -38,24 +38,25 @@ class SectorAggregate(
     private fun createSector(message: Message) {
         val command = Gson().fromJson(String(message.body), CreateSectorCommand::class.java)
 
-        val flowerOpt = flowerWriteRepository.findById(command.fid)
+        val gardenOpt = gardenWriteRepository.findById(command.gid)
         val gfOpt = gardenerFlowerWriteRepository.findById(command.gfid)
-        if (!flowerOpt.isPresent || !gfOpt.isPresent) {
-            // TODO: error
+        if (!gardenOpt.isPresent || !gfOpt.isPresent) {
+            // TODO: handle error (FK not found)
             return
         }
         val dateParsed = command.date?.let { LocalDate.parse(it) } ?: LocalDate.now()
 
         val newSector = SectorEntity(
-            flower = flowerOpt.get(),
+            garden = gardenOpt.get(),
             gardenerFlower = gfOpt.get(),
             date = dateParsed
         )
         val saved = sectorWriteRepository.save(newSector)
 
+        // MongoDB Document 변환
         val doc = SectorDocument(
             id = saved.id,
-            fid = saved.flower.id,
+            gid = saved.garden.id,
             gfid = saved.gardenerFlower.id,
             date = saved.date
         )
@@ -66,15 +67,15 @@ class SectorAggregate(
         val command = Gson().fromJson(String(message.body), UpdateSectorCommand::class.java)
         val sectorOpt = sectorWriteRepository.findById(command.sectorId)
         if (!sectorOpt.isPresent) {
-            // TODO: error
+            // TODO: handle error
             return
         }
         val sector = sectorOpt.get()
 
-        if (command.fid != null) {
-            val flowerOpt = flowerWriteRepository.findById(command.fid)
-            if (flowerOpt.isPresent) {
-                sector.flower = flowerOpt.get()
+        if (command.gid != null) {
+            val gardenOpt = gardenWriteRepository.findById(command.gid)
+            if (gardenOpt.isPresent) {
+                sector.garden = gardenOpt.get()
             }
         }
         if (command.gfid != null) {
@@ -83,6 +84,7 @@ class SectorAggregate(
                 sector.gardenerFlower = gfOpt.get()
             }
         }
+        // 날짜 업데이트
         if (command.date != null) {
             sector.date = LocalDate.parse(command.date)
         }
@@ -91,7 +93,7 @@ class SectorAggregate(
 
         val doc = SectorDocument(
             id = saved.id,
-            fid = saved.flower.id,
+            gid = saved.garden.id,
             gfid = saved.gardenerFlower.id,
             date = saved.date
         )
@@ -104,7 +106,7 @@ class SectorAggregate(
             sectorWriteRepository.deleteById(command.sectorId)
             syncGateway.send(mapOf("id" to command.sectorId), "sector", "delete")
         } else {
-            // TODO: error
+            // TODO: handle error
         }
     }
 }

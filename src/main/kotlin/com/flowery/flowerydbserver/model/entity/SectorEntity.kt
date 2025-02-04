@@ -18,7 +18,7 @@ data class SectorEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "garden_id")
-    var flower: FlowerEntity,
+    var garden: GardenEntity,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gardenerFlower_id", nullable = false)
