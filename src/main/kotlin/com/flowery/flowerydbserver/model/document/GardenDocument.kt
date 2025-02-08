@@ -7,6 +7,6 @@ import org.springframework.data.mongodb.core.mapping.Document
 data class GardenDocument(
     @Id
     val id: String,
-    val uid: String,
+    val gardenerId: String,  // GardenerEntity ID
     val key: String?
 )

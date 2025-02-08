@@ -1,6 +1,7 @@
 package com.flowery.flowerydbserver.controller
 
-import FlowerEntity
+import com.flowery.flowerydbserver.constant.FlowerColor
+import com.flowery.flowerydbserver.constant.FlowerKind
 import com.flowery.flowerydbserver.gateway.CommandGateway
 import com.flowery.flowerydbserver.model.command.*
 import com.flowery.flowerydbserver.model.request.flower.CreateFlowerRequest
@@ -18,13 +19,14 @@ class FlowerController(
     @PostMapping
     fun createFlower(@RequestBody request: CreateFlowerRequest): String {
 
-        val kind = FlowerEntity.Kind.random()
-        val color = FlowerEntity.FlowerColor.random()
+        val kind = FlowerKind.random()
+        val color = FlowerColor.random()
 
         val command = CreateFlowerCommand(
             color = color,
             kind = kind,
-            content = kind.content
+            content = kind.content,
+            uid = request.uid // gardenerID
         )
 
         commandGateway.send(command,"flower", "create")
@@ -35,7 +37,8 @@ class FlowerController(
     fun deleteFlower(@RequestBody request: DeleteFlowerRequest): String {
 
         val command = DeleteFlowerCommand(
-            id = request.id
+            uid = request.uid,
+            fid = request.fid
         )
 
         commandGateway.send(command,"flower", "delete")

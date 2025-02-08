@@ -83,6 +83,39 @@ class SyncRmqConfig {
         .to(syncExchange)
         .with("sync.garden.#")
 
+    @Bean
+    fun gardenerSyncQueue(): Queue = Queue(SyncQueueNameList.GARDENER_QUEUE, true)
+
+    @Bean
+    fun gardenerSyncBinding(
+        gardenerSyncQueue: Queue,
+        syncExchange: TopicExchange
+    ): Binding = BindingBuilder.bind(gardenerSyncQueue)
+        .to(syncExchange)
+        .with("sync.gardener.#")
+
+    @Bean
+    fun flowerSyncQueue(): Queue = Queue(SyncQueueNameList.FLOWER_QUEUE, true)
+
+    @Bean
+    fun flowerSyncBinding(
+        flowerSyncQueue: Queue,
+        syncExchange: TopicExchange
+    ): Binding = BindingBuilder.bind(flowerSyncQueue)
+        .to(syncExchange)
+        .with("sync.flower.#")
+
+    @Bean
+    fun gardenerFlowerSyncQueue(): Queue = Queue(SyncQueueNameList.GARDENERFLOWER_QUEUE, true)
+
+    @Bean
+    fun gardenerFlowerSyncBinding(
+        gardenerFlowerSyncQueue: Queue,
+        syncExchange: TopicExchange
+    ): Binding = BindingBuilder.bind(gardenerFlowerSyncQueue)
+        .to(syncExchange)
+        .with("sync.gardener_flower.#")
+
 
     // ----------------------------------
     // 6) RabbitTemplate & Converter

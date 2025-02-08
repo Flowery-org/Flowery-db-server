@@ -1,6 +1,5 @@
 package com.flowery.flowerydbserver.model.entity
 
-import FlowerEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
@@ -19,25 +18,24 @@ data class GardenerFlowerEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gardener_id", nullable = false)
-    val uid: GardenerEntity, // Gardener ID
+    val gardener: GardenerEntity, // Gardener ID
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "flower_id")
-    val fid: FlowerEntity, // Flower ID
+    val flower: FlowerEntity, // Flower ID
 
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDate = LocalDate.now(),
 
     @Column(name = "updated_at", nullable = false)
-    val updatedAt: LocalDate = LocalDate.now(),
+    var updatedAt: LocalDate = LocalDate.now(),
 
     @Column(name = "is_blossom", nullable = false)
-    val isBlossom: Boolean = false,
+    var isBlossom: Boolean = false,
 
-    @OneToMany(mappedBy = "gardener_flower", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "gardenerFlower", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var chores: List<ChoreEntity> = mutableListOf(),
 
     @OneToOne(fetch = FetchType.LAZY)
-    val sector: SectorEntity
-
+    val sector: SectorEntity? = null
 )

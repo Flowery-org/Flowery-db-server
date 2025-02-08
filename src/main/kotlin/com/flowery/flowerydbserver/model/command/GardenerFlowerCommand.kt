@@ -12,5 +12,6 @@ data class UpdateGardenerFlowerBlossomCommand(
 )
 
 data class DeleteGardenerFlowerCommand(
-    val id: String
+    val uid: String, // gardener ID
+    val fid: String, // flower ID
 )

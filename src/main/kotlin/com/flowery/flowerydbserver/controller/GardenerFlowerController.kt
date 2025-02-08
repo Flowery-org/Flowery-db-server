@@ -2,8 +2,6 @@ package com.flowery.flowerydbserver.controller
 
 import com.flowery.flowerydbserver.gateway.CommandGateway
 import com.flowery.flowerydbserver.model.command.*
-import com.flowery.flowerydbserver.model.request.gardener.*
-import com.flowery.flowerydbserver.model.request.gardenerflower.CreateGardenerFlowerRequest
 import com.flowery.flowerydbserver.model.request.gardenerflower.UpdateGardenerFlowerBlossomRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*

@@ -5,5 +5,6 @@ data class CreateFlowerRequest(
 )
 
 data class DeleteFlowerRequest(
-    val id: String, // flower ID
+    val uid: String, // gardener ID
+    val fid: String, // flower ID
 )

@@ -2,10 +2,11 @@ package com.flowery.flowerydbserver.controller
 
 import com.flowery.flowerydbserver.gateway.CommandGateway
 import com.flowery.flowerydbserver.model.command.CreateSectorCommand
-import com.flowery.flowerydbserver.model.command.DeleteSectorCommand
 import com.flowery.flowerydbserver.model.command.UpdateSectorCommand
+import com.flowery.flowerydbserver.model.command.DeleteSectorCommand
 import com.flowery.flowerydbserver.model.request.CreateSectorRequest
 import com.flowery.flowerydbserver.model.request.UpdateSectorRequest
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -14,34 +15,35 @@ class SectorController(
     private val commandGateway: CommandGateway
 ) {
     @PostMapping
-    fun createSector(@RequestBody request: CreateSectorRequest): String {
+    fun createSector(@RequestBody request: CreateSectorRequest): ResponseEntity<Any> {
         val command = CreateSectorCommand(
             gid = request.gid,
-            fid = request.fid,
-            date = request.date // 예: "2025-01-19"
+            gfid = request.gfid,
+            date = request.date,
         )
         commandGateway.send(command, "sector", "create")
-        return "Sector created."
+        return ResponseEntity.ok("Sector created.")
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{sectorId}")
     fun updateSector(
-        @PathVariable id: String,
+        @PathVariable sectorId: String,
         @RequestBody request: UpdateSectorRequest
-    ): String {
+    ): ResponseEntity<Any> {
         val command = UpdateSectorCommand(
-            id = id,
-            fid = request.fid,
+            sectorId = sectorId,
+            gid = request.gid,
+            gfid = request.gfid,
             date = request.date
         )
         commandGateway.send(command, "sector", "update")
-        return "Sector updated."
+        return ResponseEntity.ok("Sector updated.")
     }
 
-    @DeleteMapping("/{id}")
-    fun deleteSector(@PathVariable id: String): String {
-        val command = DeleteSectorCommand(id)
+    @DeleteMapping("/{sectorId}")
+    fun deleteSector(@PathVariable sectorId: String): ResponseEntity<Any> {
+        val command = DeleteSectorCommand(sectorId)
         commandGateway.send(command, "sector", "delete")
-        return "Sector deleted."
+        return ResponseEntity.ok("Sector deleted.")
     }
 }

@@ -1,15 +1,16 @@
 package com.flowery.flowerydbserver.model.document
 
+import com.flowery.flowerydbserver.constant.FlowerColor
+import com.flowery.flowerydbserver.constant.FlowerKind
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
-import java.util.UUID
 
 @Document(collection = "flower")
 data class FlowerDocument(
     @Id
     val id: String,
-    val kind: Kind,
-    val color: Color,
+    val kind: FlowerKind,
+    val color: FlowerColor,
     val content: String = kind.content
 ) {
     enum class Kind(val content: String) {
