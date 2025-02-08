@@ -17,9 +17,9 @@ class SectorController(
     @PostMapping
     fun createSector(@RequestBody request: CreateSectorRequest): ResponseEntity<Any> {
         val command = CreateSectorCommand(
-            fid = request.fid,
+            gid = request.gid,
             gfid = request.gfid,
-            date = request.date
+            date = request.date,
         )
         commandGateway.send(command, "sector", "create")
         return ResponseEntity.ok("Sector created.")
@@ -32,7 +32,7 @@ class SectorController(
     ): ResponseEntity<Any> {
         val command = UpdateSectorCommand(
             sectorId = sectorId,
-            fid = request.fid,
+            gid = request.gid,
             gfid = request.gfid,
             date = request.date
         )

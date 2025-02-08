@@ -1,5 +1,6 @@
 package com.flowery.flowerydbserver.controller
 
+import com.flowery.flowerydbserver.constant.GardenerStatus
 import com.flowery.flowerydbserver.gateway.CommandGateway
 import com.flowery.flowerydbserver.model.command.*
 import com.flowery.flowerydbserver.model.request.gardener.*
@@ -22,7 +23,8 @@ class GardenerController(
             password = request.password.hashCode().toString(),
             email = request.email,
             name = request.name,
-            nickname = request.nickname
+            nickname = request.nickname,
+            status = GardenerStatus.UNFINISHED
         )
 
         commandGateway.send(command,"gardener", "create")
@@ -40,7 +42,7 @@ class GardenerController(
         return "Delete Gardener"
     }
 
-    @PutMapping
+    @PutMapping("/status")
     fun updateGardenerStatus(@RequestBody request: UpdateGardenerStatusRequest): String {
 
         val command = UpdateGardenerStatusCommand(
@@ -52,7 +54,7 @@ class GardenerController(
         return "Update Gardener Status"
     }
 
-    @PutMapping
+    @PutMapping("/password")
     fun updateGardenerPassword(@RequestBody request: UpdateGardenerPasswordRequest): String {
 
         val command = UpdateGardenerPasswordCommand(
@@ -64,7 +66,7 @@ class GardenerController(
         return "Update Gardener Password"
     }
 
-    @PutMapping
+    @PutMapping("/name")
     fun updateGardenerName(@RequestBody request: UpdateGardenerNameRequest): String {
 
         val command = UpdateGardenerNameCommand(
@@ -76,7 +78,7 @@ class GardenerController(
         return "Update Gardener Name"
     }
 
-    @PutMapping
+    @PutMapping("/nickname")
     fun createGardenerNickname(@RequestBody request: UpdateGardenerNicknameRequest): String {
 
         val command = UpdateGardenerNicknameCommand(

@@ -7,5 +7,5 @@ object SyncQueueNameList {
     const val GARDEN_QUEUE = "queue.sync.garden"
     const val GARDENER_QUEUE = "queue.sync.gardener"
     const val FLOWER_QUEUE = "queue.sync.flower"
-    const val GARDENERFlOWER_QUEUE = "queue.sync.gardener_flower"
+    const val GARDENERFLOWER_QUEUE = "queue.sync.gardener_flower"
 }

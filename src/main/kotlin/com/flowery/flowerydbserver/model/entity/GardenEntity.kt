@@ -23,4 +23,5 @@ data class GardenEntity(
 
     @OneToMany(mappedBy = "garden", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var sectors: List<SectorEntity> = mutableListOf()
+
 )

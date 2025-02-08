@@ -6,9 +6,9 @@ import com.flowery.flowerydbserver.model.command.CreateSectorCommand
 import com.flowery.flowerydbserver.model.command.UpdateSectorCommand
 import com.flowery.flowerydbserver.model.command.DeleteSectorCommand
 import com.flowery.flowerydbserver.model.document.SectorDocument
+import com.flowery.flowerydbserver.model.entity.GardenerFlowerEntity
 import com.flowery.flowerydbserver.model.entity.SectorEntity
 import com.flowery.flowerydbserver.model.entity.GardenEntity
-import com.flowery.flowerydbserver.model.entity.GardenerFlowerEntity
 import com.flowery.flowerydbserver.repository.SectorWriteRepository
 import com.flowery.flowerydbserver.repository.GardenWriteRepository
 import com.flowery.flowerydbserver.repository.GardenerFlowerWriteRepository
@@ -49,7 +49,8 @@ class SectorAggregate(
         val newSector = SectorEntity(
             garden = gardenOpt.get(),
             gardenerFlower = gfOpt.get(),
-            date = dateParsed
+            date = dateParsed,
+
         )
         val saved = sectorWriteRepository.save(newSector)
 

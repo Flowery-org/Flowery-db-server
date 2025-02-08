@@ -1,6 +1,5 @@
 package com.flowery.flowerydbserver.model.entity
 
-import FlowerEntity
 import jakarta.persistence.*
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
@@ -25,5 +24,9 @@ data class SectorEntity(
     var gardenerFlower: GardenerFlowerEntity,
 
     @Column(name = "date")
-    var date: LocalDate = LocalDate.now()
+    var date: LocalDate = LocalDate.now(),
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "garden_id", nullable = false)
+//    val garden: GardenEntity
 )

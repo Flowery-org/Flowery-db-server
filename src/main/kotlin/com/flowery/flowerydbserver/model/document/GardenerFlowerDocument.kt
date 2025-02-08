@@ -8,8 +8,8 @@ import java.time.LocalDate
 data class GardenerFlowerDocument(
     @Id
     val id: String,
-    val uid: String,
-    val fid: String,
+    val gardenerId: String,
+    val flowerId: String,
     val createdAt: LocalDate,
     val updatedAt: LocalDate,
     val isBlossom: Boolean

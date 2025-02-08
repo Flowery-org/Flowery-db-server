@@ -6,7 +6,6 @@ import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
 import java.time.LocalDate
 import java.util.*
-
 @Entity
 @Table(name = "gardener")
 @DynamicUpdate
@@ -45,14 +44,14 @@ data class GardenerEntity(
     @Column(name = "updated_at", nullable = false)
     var updatedAt: LocalDate = LocalDate.now(),
 
-    @OneToMany(mappedBy = "gardener_flower", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "gardener", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var gardenerFlowers: List<GardenerFlowerEntity> = mutableListOf(),
 
-    @OneToMany(mappedBy = "gardener_flower", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var flowers: List<GardenerFlowerEntity> = mutableListOf(),
+//    @OneToMany(mappedBy = "gardener", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+//    var flowers: List<GardenerFlowerEntity> = mutableListOf(),
 
-    @OneToMany(mappedBy = "gardener", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var chores: List<ChoreEntity> = mutableListOf(),
+//    @OneToMany(mappedBy = "gardener", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+//    var chores: List<ChoreEntity> = mutableListOf(),
 
     @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
     var garden: GardenEntity? = null

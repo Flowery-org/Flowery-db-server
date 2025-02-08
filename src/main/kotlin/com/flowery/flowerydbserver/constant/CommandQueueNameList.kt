@@ -7,5 +7,5 @@ object CommandQueueNameList {
     const val GARDEN_QUEUE = "queue.command.garden"
     const val GARDENER_QUEUE = "queue.command.gardener"
     const val FLOWER_QUEUE = "queue.command.flower"
-    const val GARDENERFlOWER_QUEUE = "queue.command.gardener_flower"
+    const val GARDENERFLOWER_QUEUE = "queue.command.gardener_flower"
 }
