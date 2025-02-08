@@ -15,6 +15,9 @@ class GardenerController(
     @Autowired private val commandGateway: CommandGateway,
     @Autowired private val gardenerProjection: GardenerProjection
 ) {
+    init {
+        println("GardenerController")
+    }
     @PostMapping
     fun createGardener(@RequestBody request: CreateGardenerRequest): String {
 
