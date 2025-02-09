@@ -20,7 +20,21 @@ spring:
     username: guest
     password: guest
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus, health, info, metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      access: unrestricted
+    prometheus:
+      access: unrestricted
 
 server:
   port: 8080
+  address: 0.0.0.0 # prometheus setting  - allow external connection
 
