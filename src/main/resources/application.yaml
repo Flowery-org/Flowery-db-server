@@ -5,7 +5,7 @@ spring:
     hibernate:
       ddl-auto: update
   datasource:
-    url: jdbc:postgresql://localhost:11234/flowery-write-db
+    url: jdbc:postgresql://localhost:5432/flowery-write-db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -13,12 +13,20 @@ spring:
     mongodb:
       username: admin
       password: password
-      uri: mongodb://admin:password@localhost:11235/flowery-read-db?authSource=admin
+      uri: mongodb://admin:password@localhost:27017/flowery-read-db?authSource=admin
   rabbitmq:
     host: localhost
     port: 5672
     username: guest
     password: guest
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java  # 변경 감지 경로 추가
+    livereload:
+      enabled: true
+  thymeleaf:
+    cache: false
 
 management:
   endpoints:

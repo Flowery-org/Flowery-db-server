@@ -6,6 +6,7 @@ import com.flowery.flowerydbserver.model.command.UpdateSectorCommand
 import com.flowery.flowerydbserver.model.command.DeleteSectorCommand
 import com.flowery.flowerydbserver.model.request.CreateSectorRequest
 import com.flowery.flowerydbserver.model.request.UpdateSectorRequest
+import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 

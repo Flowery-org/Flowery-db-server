@@ -18,6 +18,6 @@ data class GardenerDocument(
     val nickname: String,
     val token: String? = null,
     val status: GardenerStatus,
-    val createdAt: LocalDate,
-    val updatedAt: LocalDate,
+//    val createdAt: LocalDate,
+//    val updatedAt: LocalDate,
 )

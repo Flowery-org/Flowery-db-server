@@ -62,24 +62,25 @@ class GardenerAggregate(
 
         try {
             savedEntity = gardenerWriteRepository.save(newGardener)
-        } catch (e: Exception){
+
+            if(savedEntity != null) {
+                val doc = GardenerDocument(
+                    id = savedEntity.id,
+                    ident = savedEntity.ident,
+                    password = savedEntity.password,
+                    email = savedEntity.email,
+                    name = savedEntity.name,
+                    nickname = savedEntity.nickname,
+                    status = savedEntity.status
+//                    createdAt = savedEntity.createdAt,
+//                    updatedAt = savedEntity.updatedAt
+                )
+
+                this.syncGateway.send(doc, "gardener", "upsert")
+            }
+        } catch (e: Exception) {
+            println(e.message)
             //* TODO: Need to add exception class
-        }
-
-        if(savedEntity != null) {
-            val doc = GardenerDocument(
-                id = savedEntity.id,
-                ident = savedEntity.ident,
-                password = savedEntity.password,
-                email = savedEntity.email,
-                name = savedEntity.name,
-                nickname = savedEntity.nickname,
-                status = savedEntity.status,
-                createdAt = savedEntity.createdAt,
-                updatedAt = savedEntity.updatedAt
-            )
-
-            this.syncGateway.send(doc, "user", "upsert")
         }
     }
 
@@ -128,8 +129,8 @@ class GardenerAggregate(
             nickname = gardener.nickname,
             token = gardener.token,
             status = gardener.status,
-            createdAt = gardener.createdAt,
-            updatedAt = gardener.updatedAt
+//            createdAt = gardener.createdAt,
+//            updatedAt = gardener.updatedAt
         )
 
         syncGateway.send(doc, "gardener", "upsert")
