@@ -12,7 +12,6 @@ import java.util.*
 @DynamicUpdate
 @DynamicInsert
 data class GardenerFlowerEntity(
-
     @Id
     @Column(name = "id", nullable = false, unique = true)
     val id: String = UUID.randomUUID().toString(),
@@ -25,6 +24,7 @@ data class GardenerFlowerEntity(
     @JoinColumn(name = "flower_id")
     val fid: FlowerEntity, // Flower ID
 
+    // createdAt 필드를 이용하여 꽃을 구분 (Sector 대체)
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDate = LocalDate.now(),
 
@@ -34,10 +34,9 @@ data class GardenerFlowerEntity(
     @Column(name = "is_blossom", nullable = false)
     val isBlossom: Boolean = false,
 
-    @OneToMany(mappedBy = "gardener_flower", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var chores: List<ChoreEntity> = mutableListOf(),
-
-    @OneToOne(fetch = FetchType.LAZY)
-    val sector: SectorEntity
-
+    // mappedBy 값 수정하여 ChoreEntity와의 관계 정의
+    @OneToMany(mappedBy = "gfid", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var chores: List<ChoreEntity> = mutableListOf()
+    
+    // Sector 엔티티 참조 제거
 )

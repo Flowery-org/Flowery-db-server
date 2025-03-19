@@ -17,7 +17,7 @@ class ChoreController(
     fun createChore(@RequestBody request: CreateChoreRequest): String {
         val command = CreateChoreCommand(
             uid = request.uid,
-            sid = request.sid,
+            gfid = request.gfid, // 이 부분을 gfid로 변경
             fid = request.fid,
             content = request.content
         )

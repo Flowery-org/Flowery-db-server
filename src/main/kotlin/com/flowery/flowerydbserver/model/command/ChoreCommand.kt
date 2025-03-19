@@ -2,7 +2,7 @@ package com.flowery.flowerydbserver.model.command
 
 data class CreateChoreCommand(
     val uid: String,
-    val sid: String,
+    val gfid: String, // 이 부분이 gfid로 변경
     val fid: String?,
     val content: String?
 )

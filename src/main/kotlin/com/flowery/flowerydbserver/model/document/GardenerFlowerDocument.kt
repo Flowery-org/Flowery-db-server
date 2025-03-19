@@ -10,6 +10,7 @@ data class GardenerFlowerDocument(
     val id: String,
     val uid: String,
     val fid: String,
+    // 유지: 날짜 필드를 사용하여 구분
     val createdAt: LocalDate,
     val updatedAt: LocalDate,
     val isBlossom: Boolean

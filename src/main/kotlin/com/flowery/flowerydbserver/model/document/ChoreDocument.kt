@@ -9,8 +9,10 @@ data class ChoreDocument(
     @Id
     val id: String,
     val uid: String,
-    val sid: String,
-    val fid: String?,
+    
+    // 수정: sid(Sector ID) 필드를 gfid(GardenerFlower ID)로 변경
+    val gfid: String,
+    
     val content: String?,
     val finished: Boolean,
     val createdAt: LocalDate,

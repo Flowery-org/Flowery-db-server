@@ -20,7 +20,9 @@ data class GardenEntity(
 
     @Column(name = "key", length = 255)
     var key: String? = null,
-
-    @OneToMany(mappedBy = "garden", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var sectors: MutableList<SectorEntity> = mutableListOf()
+    
+    // 제거: sectors 리스트 (Sector 엔티티가 삭제됨)
+    // 추가: 정원에 있는 모든 꽃들을 직접 참조하는 리스트
+    @OneToMany(mappedBy = "uid", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var gardenerFlowers: MutableList<GardenerFlowerEntity> = mutableListOf()
 )
