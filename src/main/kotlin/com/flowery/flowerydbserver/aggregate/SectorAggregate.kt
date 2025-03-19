@@ -3,25 +3,27 @@ package com.flowery.flowerydbserver.aggregate
 import com.flowery.flowerydbserver.constant.CommandQueueNameList
 import com.flowery.flowerydbserver.gateway.SyncGateway
 import com.flowery.flowerydbserver.model.command.CreateSectorCommand
-import com.flowery.flowerydbserver.model.command.DeleteSectorCommand
 import com.flowery.flowerydbserver.model.command.UpdateSectorCommand
+import com.flowery.flowerydbserver.model.command.DeleteSectorCommand
 import com.flowery.flowerydbserver.model.document.SectorDocument
-import com.flowery.flowerydbserver.model.entity.GardenEntity
+import com.flowery.flowerydbserver.model.entity.GardenerFlowerEntity
 import com.flowery.flowerydbserver.model.entity.SectorEntity
-import com.flowery.flowerydbserver.repository.GardenWriteRepository
+import com.flowery.flowerydbserver.model.entity.GardenEntity
 import com.flowery.flowerydbserver.repository.SectorWriteRepository
+import com.flowery.flowerydbserver.repository.GardenWriteRepository
+import com.flowery.flowerydbserver.repository.GardenerFlowerWriteRepository
 import com.google.gson.Gson
 import org.springframework.amqp.core.Message
 import org.springframework.amqp.rabbit.annotation.RabbitListener
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.time.LocalDate
 
 @Component
 class SectorAggregate(
-    @Autowired private val sectorWriteRepository: SectorWriteRepository,
-    @Autowired private val gardenWriteRepository: GardenWriteRepository,
-    @Autowired private val syncGateway: SyncGateway
+    private val sectorWriteRepository: SectorWriteRepository,
+    private val gardenWriteRepository: GardenWriteRepository,
+    private val gardenerFlowerWriteRepository: GardenerFlowerWriteRepository,
+    private val syncGateway: SyncGateway
 ) {
     @RabbitListener(queues = [CommandQueueNameList.SECTOR_QUEUE])
     fun on(message: Message) {
@@ -36,26 +38,27 @@ class SectorAggregate(
     private fun createSector(message: Message) {
         val command = Gson().fromJson(String(message.body), CreateSectorCommand::class.java)
 
-        // command.gid: Garden의 식별자 (String)
         val gardenOpt = gardenWriteRepository.findById(command.gid)
-        if (!gardenOpt.isPresent) {
-            // TODO: error handling
+        val gfOpt = gardenerFlowerWriteRepository.findById(command.gfid)
+        if (!gardenOpt.isPresent || !gfOpt.isPresent) {
+            // TODO: handle error (FK not found)
             return
         }
-        val garden: GardenEntity = gardenOpt.get()
+        val dateParsed = command.date?.let { LocalDate.parse(it) } ?: LocalDate.now()
 
-        val dateParsed = command.date?.let { LocalDate.parse(it) }
         val newSector = SectorEntity(
-            gid = garden,  // ManyToOne
-            fid = command.fid,
-            date = dateParsed
+            garden = gardenOpt.get(),
+            gardenerFlower = gfOpt.get(),
+            date = dateParsed,
+
         )
         val saved = sectorWriteRepository.save(newSector)
 
+        // MongoDB Document 변환
         val doc = SectorDocument(
             id = saved.id,
-            gid = saved.gid.id,
-            fid = saved.fid,
+            gid = saved.garden.id,
+            gfid = saved.gardenerFlower.id,
             date = saved.date
         )
         syncGateway.send(doc, "sector", "upsert")
@@ -63,39 +66,48 @@ class SectorAggregate(
 
     private fun updateSector(message: Message) {
         val command = Gson().fromJson(String(message.body), UpdateSectorCommand::class.java)
-        val sectorOpt = sectorWriteRepository.findById(command.id)
-        if (sectorOpt.isPresent) {
-            val sector = sectorOpt.get()
-
-            // val gardenOpt = gardenWriteRepository.findById(command.newGardenId)
-            // if (gardenOpt.isPresent) {
-            //     sector.gid = gardenOpt.get()
-            // }
-
-            sector.fid = command.fid
-            sector.date = command.date?.let { LocalDate.parse(it) }
-
-            val saved = sectorWriteRepository.save(sector)
-            val doc = SectorDocument(
-                id = saved.id,
-                gid = saved.gid.id,
-                fid = saved.fid,
-                date = saved.date
-            )
-            syncGateway.send(doc, "sector", "upsert")
-        } else {
-            // TODO: error handling
+        val sectorOpt = sectorWriteRepository.findById(command.sectorId)
+        if (!sectorOpt.isPresent) {
+            // TODO: handle error
+            return
         }
+        val sector = sectorOpt.get()
+
+        if (command.gid != null) {
+            val gardenOpt = gardenWriteRepository.findById(command.gid)
+            if (gardenOpt.isPresent) {
+                sector.garden = gardenOpt.get()
+            }
+        }
+        if (command.gfid != null) {
+            val gfOpt = gardenerFlowerWriteRepository.findById(command.gfid)
+            if (gfOpt.isPresent) {
+                sector.gardenerFlower = gfOpt.get()
+            }
+        }
+        // 날짜 업데이트
+        if (command.date != null) {
+            sector.date = LocalDate.parse(command.date)
+        }
+
+        val saved = sectorWriteRepository.save(sector)
+
+        val doc = SectorDocument(
+            id = saved.id,
+            gid = saved.garden.id,
+            gfid = saved.gardenerFlower.id,
+            date = saved.date
+        )
+        syncGateway.send(doc, "sector", "upsert")
     }
 
     private fun deleteSector(message: Message) {
         val command = Gson().fromJson(String(message.body), DeleteSectorCommand::class.java)
-        val sectorOpt = sectorWriteRepository.findById(command.id)
-        if (sectorOpt.isPresent) {
-            sectorWriteRepository.deleteById(command.id)
-            syncGateway.send(mapOf("id" to command.id), "sector", "delete")
+        if (sectorWriteRepository.existsById(command.sectorId)) {
+            sectorWriteRepository.deleteById(command.sectorId)
+            syncGateway.send(mapOf("id" to command.sectorId), "sector", "delete")
         } else {
-            // TODO: error handling
+            // TODO: handle error
         }
     }
 }

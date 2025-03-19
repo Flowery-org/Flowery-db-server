@@ -16,14 +16,15 @@ class UserController(
     @Autowired private val commandGateway: CommandGateway,
     @Autowired private val userProjection: UserProjection
 ) {
-    @PostMapping
-    fun createUser(@RequestBody request: CreateUserRequest): String {
-        commandGateway.send(CreateUserCommand(request.name),"user", "create")
-        return "ok" //* TODO: Return Proper response
-    }
-
-    @GetMapping("/{id}")
-    fun getUserById(@PathVariable id: String): UserDocument? {
-        return this.userProjection.queryUser(id)
-    }
+    //TODO: Remove it later
+//    @PostMapping
+//    fun createUser(@RequestBody request: CreateUserRequest): String {
+//        commandGateway.send(CreateUserCommand(request.name),"user", "create")
+//        return "ok" //* TODO: Return Proper response
+//    }
+//
+//    @GetMapping("/{id}")
+//    fun getUserById(@PathVariable id: String): UserDocument? {
+//        return this.userProjection.queryUser(id)
+//    }
 }

@@ -1,10 +1,12 @@
+package com.flowery.flowerydbserver.model.entity
+
 import com.flowery.flowerydbserver.constant.FlowerColor
-import com.flowery.flowerydbserver.constant.Kind
+import com.flowery.flowerydbserver.constant.FlowerKind
 import com.flowery.flowerydbserver.model.entity.*
 import jakarta.persistence.*
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
-import java.util.UUID
+import java.util.*
 
 @Entity
 @Table(name = "flower")
@@ -22,15 +24,12 @@ data class FlowerEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "kind", nullable = false, unique = true)
-    val kind: Kind,
+    val kind: FlowerKind,
 
     @Column(name = "content", nullable = false, unique = true)
     val content: String = kind.content,
 
-    @OneToMany(mappedBy = "gardener_flower",cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "flower", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val gardenerFlowers: List<GardenerFlowerEntity> = mutableListOf()
 
-) {
-}
-
-
+)

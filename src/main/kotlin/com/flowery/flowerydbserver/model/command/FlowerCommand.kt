@@ -1,12 +1,15 @@
 package com.flowery.flowerydbserver.model.command
 
-import FlowerEntity
+import com.flowery.flowerydbserver.constant.FlowerColor
+import com.flowery.flowerydbserver.constant.FlowerKind
 
 data class CreateFlowerCommand(
-    val color: FlowerEntity.FlowerColor,
-    val kind: FlowerEntity.Kind,
-    val content: String
+    val color: FlowerColor,
+    val kind: FlowerKind,
+    val content: String,
+    val uid: String
 )
 data class DeleteFlowerCommand(
-    val id: String
+    val uid: String,
+    val fid: String
 )

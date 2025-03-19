@@ -1,5 +1,6 @@
 package com.flowery.flowerydbserver.model.document
 
+import com.flowery.flowerydbserver.constant.GardenerStatus
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDate
@@ -17,12 +18,6 @@ data class GardenerDocument(
     val nickname: String,
     val token: String? = null,
     val status: GardenerStatus,
-    val createdAt: LocalDate,
-    val updatedAt: LocalDate,
-) {
-    enum class GardenerStatus {
-        UNFINISHED,
-        NORMAL,
-        ADMIN
-    }
-}
+//    val createdAt: LocalDate,
+//    val updatedAt: LocalDate,
+)
