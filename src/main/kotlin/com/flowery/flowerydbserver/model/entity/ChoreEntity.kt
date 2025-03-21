@@ -17,7 +17,7 @@ data class ChoreEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gardener_id", nullable = false)
-    var garden: GardenEntity, // Gardener ID
+    var uid: GardenerEntity, // Gardener ID
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gardenerflower_id", nullable = false)
