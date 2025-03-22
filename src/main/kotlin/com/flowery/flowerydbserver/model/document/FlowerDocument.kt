@@ -12,21 +12,4 @@ data class FlowerDocument(
     val kind: FlowerKind,
     val color: FlowerColor,
     val content: String = kind.content
-) {
-    enum class Kind(val content: String) {
-        ROSE("Love and Passion"),
-        SUNFLOWER("Adoration and Loyalty");
-
-        companion object {
-            fun random(): Kind = values().random()
-        }
-    }
-
-    enum class Color {
-        RED, YELLOW, BLUE, WHITE;
-
-        companion object {
-            fun random(): Color = values().random()
-        }
-    }
-}
+)

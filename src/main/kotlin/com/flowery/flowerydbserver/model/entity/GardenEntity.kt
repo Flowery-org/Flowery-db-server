@@ -14,15 +14,14 @@ data class GardenEntity(
     @Column(name = "id", length = 36, nullable = false)
     var id: String = UUID.randomUUID().toString(),
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gardener_id", nullable = false)
     var gardener: GardenerEntity, // Gardener ID
 
     @Column(name = "key", length = 255)
     var key: String? = null,
     
-    // 제거: sectors 리스트 (Sector 엔티티가 삭제됨)
-    // 추가: 정원에 있는 모든 꽃들을 직접 참조하는 리스트
-    @OneToMany(mappedBy = "uid", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    // GardenerFlower와의 관계 (Sector 대체)
+    @OneToMany(mappedBy = "garden", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var gardenerFlowers: MutableList<GardenerFlowerEntity> = mutableListOf()
 )

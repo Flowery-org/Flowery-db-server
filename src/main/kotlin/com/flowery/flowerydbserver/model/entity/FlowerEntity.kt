@@ -2,7 +2,6 @@ package com.flowery.flowerydbserver.model.entity
 
 import com.flowery.flowerydbserver.constant.FlowerColor
 import com.flowery.flowerydbserver.constant.FlowerKind
-import com.flowery.flowerydbserver.model.entity.*
 import jakarta.persistence.*
 import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
@@ -28,7 +27,6 @@ data class FlowerEntity(
     @Column(name = "content", nullable = false, unique = true)
     val content: String = kind.content,
 
-    // 수정: mappedBy 값을 "gardener_flower"에서 "fid"로 변경
-    @OneToMany(mappedBy = "fid", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "flower", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val gardenerFlowers: List<GardenerFlowerEntity> = mutableListOf()
 )

@@ -6,6 +6,7 @@ import org.hibernate.annotations.DynamicInsert
 import org.hibernate.annotations.DynamicUpdate
 import java.time.LocalDate
 import java.util.*
+
 @Entity
 @Table(name = "gardener")
 @DynamicUpdate
@@ -46,11 +47,10 @@ data class GardenerEntity(
     @OneToMany(mappedBy = "gardener", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var gardenerFlowers: List<GardenerFlowerEntity> = mutableListOf(),
     
-    // 수정: mappedBy 값을 "gardener"에서 "uid"로 변경
     @OneToMany(mappedBy = "uid", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var chores: List<ChoreEntity> = mutableListOf(),
     
-    // 수정: mappedBy 필드 추가
-    @OneToOne(mappedBy = "uid", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+    // 수정: mappedBy 값을 "uid"에서 "gardener"로 변경
+    @OneToOne(mappedBy = "gardener", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
     var garden: GardenEntity? = null
 )

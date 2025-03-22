@@ -33,6 +33,16 @@ data class GardenerFlowerEntity(
     @Column(name = "is_blossom", nullable = false)
     var isBlossom: Boolean = false,
 
-    @OneToMany(mappedBy = "garden", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var chores: List<ChoreEntity> = mutableListOf(),
+    // Sector 기능을 통합: Garden 연결
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "garden_id")
+    var garden: GardenEntity? = null,
+
+    // Sector의 date 기능 통합 (기본적으로 createdAt 사용)
+    @Column(name = "sector_date")
+    var sectorDate: LocalDate? = null,
+
+    // 수정: mappedBy 값이 ChoreEntity의 gardenerFlower 필드와 일치하는지 확인
+    @OneToMany(mappedBy = "gardenerFlower", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var chores: List<ChoreEntity> = mutableListOf()
 )
